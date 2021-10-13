@@ -33,14 +33,19 @@ namespace CrudSwagger.Controllers
         public Users Get(int id)
         {
             return _CRUDContext.Users.SingleOrDefault(x=>x.userId==id);
-        }
+        }     
 
         // POST api/<StudentsController>
         [HttpPost]
         public void Post([FromBody] Users users)
         {
-            _CRUDContext.Users.Add(users);
-            _CRUDContext.SaveChanges();
+            var item = _CRUDContext.Users.FirstOrDefault(x => x.DocumentCi == users.DocumentCi);
+
+            if (item == null)
+            {
+                _CRUDContext.Users.Add(users);
+                _CRUDContext.SaveChanges();
+            }
         }
 
         // PUT api/<StudentsController>/5
