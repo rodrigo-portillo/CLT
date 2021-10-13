@@ -38,10 +38,10 @@ namespace CrudSwagger.Controllers
         // POST api/<StudentsController>
         [HttpPost]
         public void Post([FromBody] Users users)
-        {
+        {            
             var item = _CRUDContext.Users.FirstOrDefault(x => x.DocumentCi == users.DocumentCi);
 
-            if (item == null)
+            if (item == null && users.email != null)
             {
                 _CRUDContext.Users.Add(users);
                 _CRUDContext.SaveChanges();
@@ -52,9 +52,13 @@ namespace CrudSwagger.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Users users)
         {
-            users.userId = id;
-            _CRUDContext.Users.Update(users);
-            _CRUDContext.SaveChanges();
+            var item = _CRUDContext.Users.FirstOrDefault(x => (x.DocumentCi == users.DocumentCi && x.userId != id));
+            if (item == null)
+            {
+                users.userId = id;
+                _CRUDContext.Users.Update(users);
+                _CRUDContext.SaveChanges();
+            }            
         }
 
         // DELETE api/<StudentsController>/5
